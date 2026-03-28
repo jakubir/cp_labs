@@ -15,20 +15,19 @@ class Matrix
 			{
 				data[i] = new float[size];
 				for (int j = 0; j < size; j++)
-					data[i][j] = rand() % 100;
+					data[i][j] = rand() % 10;
 			}
 		}
 
-		Matrix(const Matrix& other) {
-			size = other.size;
-
+		Matrix(const Matrix& m2) {
+			size = m2.size;
 			data = new float* [size];
 
 			for (int i = 0; i < size; i++) {
 				data[i] = new float[size];
 
 				for (int j = 0; j < size; j++) {
-					data[i][j] = other.data[i][j];
+					data[i][j] = m2.data[i][j];
 				}
 			}
 		}
@@ -41,14 +40,24 @@ class Matrix
 			delete[] data;
 		}
 
-		void print()
-		{
-			for (int i = 0; i < size; i++) {
-				for (int j = 0; j < size; j++)
-					std::cout << data[i][j] << " ";
+		Matrix& operator=(const Matrix& m2) {
+			for (int i = 0; i < size; i++)
+				delete [] data[i];
 
-				std::cout << "\n";
+			delete[] data;
+
+			size = m2.size;
+			data = new float* [size];
+
+			for (int i = 0; i < size; i++) {
+				data[i] = new float[size];
+
+				for (int j = 0; j < size; j++) {
+					data[i][j] = m2.data[i][j];
+				}
 			}
+
+			return *this;
 		}
 
 		Matrix operator+(Matrix &m2) 
@@ -66,7 +75,7 @@ class Matrix
 			return m3;
 		}
 
-		Matrix operator-(Matrix &m2)
+		Matrix operator-(const Matrix &m2) const
 		{
 			Matrix m3(size);
 
@@ -93,12 +102,22 @@ class Matrix
 					float sum = 0;
 
 					for (int k = 0; k < size; k++)
-						sum += data[i][k] * m2.data[k][i];
+						sum += data[i][k] * m2.data[k][j];
 
 					m3.data[i][j] = sum;
 				}
 
 			return m3;
+		}
+
+		void print()
+		{
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < size; j++)
+					std::cout << data[i][j] << " ";
+
+				std::cout << "\n";
+			}
 		}
 };
 
@@ -124,6 +143,8 @@ class Network
 			{
 				result_matrix = result_matrix * v.at(i);
 			}
+
+			return result_matrix;
 		}
 };
 
@@ -143,7 +164,12 @@ int main()
 	m4.print();
 	m5.print();
 
-	// network with array of matrices, calc (multypliying all matrices)
+	Network n(2);
+	n.initialize(5);
+	for (int i = 0; i < n.v.size(); i++)
+		n.v.at(i).print();
+
+	n.calculate().print(); 
 
 	return 0;
 }
