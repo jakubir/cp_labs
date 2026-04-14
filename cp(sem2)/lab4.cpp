@@ -110,7 +110,7 @@ int main()
 	Intern i(25, 40); // 800
 
 	Employee* list[5] = { &fte, &m, &e, &pte, &i };
-	int totalSalary = 0;
+	double totalSalary = 0;
 
 	for (auto employee : list)
 	{
